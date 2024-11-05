@@ -15,7 +15,11 @@ const Header = () => {
 	const [opened, setOpened] = useState(false);
 
 	useEffect(() => {
-		setIsSpecialPage(pathname === "/" || pathname.includes("/auth"));
+		setIsSpecialPage(
+			pathname === "/" ||
+				pathname.includes("/auth") ||
+				pathname.includes("/dashboard")
+		);
 	}, [pathname]);
 
 	const toggleDrawer = () => {
@@ -29,6 +33,8 @@ const Header = () => {
 	const handleSignIn = async () => {
 		signIn();
 	};
+
+	if (pathname === "/dashboard") return null;
 
 	return (
 		<>

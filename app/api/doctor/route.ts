@@ -1,10 +1,10 @@
 import dbConnect from "@/lib/dbConnect";
 import Doctor from "@/models/Doctor";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-const secret = process.env.NEXTAUTH_SECRET;
+export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
 	try {
 		await dbConnect();
 		const doctors = await Doctor.find({});

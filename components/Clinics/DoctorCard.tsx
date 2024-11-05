@@ -1,35 +1,59 @@
 "use client";
 
+import { Doctor } from "@/types/Doctor";
 import {
 	Avatar,
 	Badge,
 	Button,
+	Group,
+	Modal,
 	Rating,
 	Stack,
 	Text,
 	Title,
-	Modal,
-	Group,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { FcMoneyTransfer } from "react-icons/fc";
 import { GiStethoscope } from "react-icons/gi";
-import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { MdArrowBackIos } from "react-icons/md";
 
-interface Doctor {
-	_id: string;
-	name: string;
-	specialty: string;
-	price: string;
-	rating: number;
-	totalReviews: number;
-	image: string;
-	schedule: {
-		day: string;
-		date: string;
-		times: string[];
-	}[];
-}
+const arabicDays = {
+	sunday: "الأحد",
+	monday: "الاثنين",
+	tuesday: "الثلاثاء",
+	wednesday: "الأربعاء",
+	thursday: "الخميس",
+	friday: "الجمعة",
+	saturday: "السبت",
+};
+
+const getNextDateForDay = (targetDay: string) => {
+	const dayMap = {
+		sunday: 0,
+		monday: 1,
+		tuesday: 2,
+		wednesday: 3,
+		thursday: 4,
+		friday: 5,
+		saturday: 6,
+	};
+
+	const today = new Date();
+	const todayDay = today.getDay();
+	const targetDayNum = dayMap[targetDay.toLowerCase() as keyof typeof dayMap];
+
+	let daysUntilTarget = targetDayNum - todayDay;
+	if (daysUntilTarget < 0) {
+		daysUntilTarget += 7;
+	}
+
+	const targetDate = new Date();
+	targetDate.setDate(today.getDate() + daysUntilTarget);
+
+	const formattedDate = targetDate.toLocaleDateString("en-GB");
+
+	return formattedDate;
+};
 
 const DoctorCard = () => {
 	const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -39,6 +63,7 @@ const DoctorCard = () => {
 	const [resultModalOpen, setResultModalOpen] = useState(false);
 	const [resultMessage, setResultMessage] = useState<string>("");
 	const [selectedDate, setSelectedDate] = useState<string>("");
+	const [selectedDayName, setSelectedDayName] = useState<string>("");
 	const [selectedTime, setSelectedTime] = useState<string>("");
 
 	const currentDoctor = doctors[currentDoctorIndex];
@@ -63,7 +88,6 @@ const DoctorCard = () => {
 		fetchDoctors();
 	}, []);
 
-	// Navigation functions
 	const handlePrevDoctor = () => {
 		if (currentDoctorIndex > 0) {
 			setCurrentDoctorIndex(currentDoctorIndex - 1);
@@ -76,14 +100,25 @@ const DoctorCard = () => {
 		}
 	};
 
-	const handleOpenConfirmationModal = (date: string, time: string) => {
+	const handleOpenConfirmationModal = (
+		dayname: string,
+		date: string,
+		time: string
+	) => {
+		setSelectedDayName(dayname);
 		setSelectedDate(date);
 		setSelectedTime(time);
 		setConfirmationModalOpen(true);
 	};
 
+	const formatHour = (hour: number) => {
+		const period = hour < 12 ? "ص" : "م";
+		const formattedHour = hour % 12 || 12;
+		return `${formattedHour}${period}`;
+	};
+
 	const handleBookAppointment = async () => {
-		setConfirmationModalOpen(false); // Close confirmation modal
+		setConfirmationModalOpen(false);
 		try {
 			const response = await fetch("/api/appointments", {
 				method: "POST",
@@ -113,7 +148,7 @@ const DoctorCard = () => {
 			console.error("Error booking appointment:", error);
 			setResultMessage("حدث خطأ أثناء حجز الموعد.");
 		} finally {
-			setResultModalOpen(true); // Show result modal
+			setResultModalOpen(true);
 		}
 	};
 
@@ -127,7 +162,7 @@ const DoctorCard = () => {
 
 	return (
 		<div>
-			<Title order={2} className="text-right text-4xl font-bold mr-24 mt-10">
+			<Title order={2} className="mt-10 mr-24 text-4xl font-bold text-right">
 				أطباء العيادات
 			</Title>
 
@@ -140,7 +175,8 @@ const DoctorCard = () => {
 				centered
 			>
 				<Text>
-					هل تريد تأكيد حجز موعدك مع الدكتور {currentDoctor?.name} في{" "}
+					هل تريد تأكيد حجز موعدك مع الدكتور {currentDoctor?.name} في يوم{" "}
+					{arabicDays[selectedDayName as keyof typeof arabicDays]}{" "}
 					{selectedDate} الساعة {selectedTime}؟
 				</Text>
 				<Group mt="md" justify="end">
@@ -168,118 +204,142 @@ const DoctorCard = () => {
 				</Group>
 			</Modal>
 
-			<div className="bg-white lg:px-10 py-10 lg:py-28 rounded-[44px] mt-20 mb-60 mx-5 lg:mx-32 shadow-lg flex lg:flex-row flex-col-reverse justify-between items-center">
-				{currentDoctorIndex > 0 ? (
-					<MdArrowBackIos
-						className="bg-transparent text-gray-500 cursor-pointer"
-						size={24}
-						style={{ width: 55, height: 55 }}
-						onClick={handlePrevDoctor}
+			{/* <div className="bg-white lg:px-10 py-10 lg:py-28 rounded-[44px] mt-20 mb-60 mx-5 lg:mx-32 shadow-lg flex lg:flex-row flex-col-reverse justify-between items-center"> */}
+			<div
+				dir="rtl"
+				className="bg-white lg:px-10 py-10 lg:py-28 rounded-[44px] mt-20 mb-60 mx-5 lg:mx-32 shadow-lg grid grid-cols-1 lg:grid-cols-2"
+			>
+				<div className="flex flex-col items-center mt-10 text-center lg:flex-row lg:gap-10 lg:text-right">
+					<Avatar
+						src={currentDoctor.image}
+						alt="Doctor"
+						size={150}
+						className="object-contain mb-5 lg:mb-20 lg:mr-2 lg:self-start"
 					/>
-				) : (
-					<MdArrowBackIos
-						className="text-white"
-						size={24}
-						style={{ width: 55, height: 55 }}
-						onClick={handlePrevDoctor}
-					/>
-				)}
 
-				<div className="flex-1">
-					<Title
-						order={3}
-						className="text-2xl lg:text-4xl font-bold mt-5 lg:mt-0 mb-8 text-center"
-					>
-						احجز موعدك
-					</Title>
-
-					<div className="grid grid-cols-3 gap-4 mb-4">
-						{currentDoctor.schedule.map((daySchedule, index) => {
-							const currentYear = new Date().getFullYear();
-							const formattedDate = `${daySchedule.date}/${currentYear}`;
-
-							return (
-								<div key={index} className="flex flex-col items-center gap-4">
-									<Badge className="bg-[#6db5de] text-center text-base pl-8 rounded-lg mb-2 text-black h-10 w-24 leading-none font-medium">
-										<span>{daySchedule.day}</span>
-										<br />
-										<span>{daySchedule.date}</span>
-									</Badge>
-									{daySchedule.times.map((time, timeIndex) => (
-										<Button
-											key={timeIndex}
-											variant="filled"
-											color="#ebedf0"
-											className="mb-2 text-base text-black w-24 h-fit rounded-lg"
-											dir="rtl"
-											onClick={() =>
-												handleOpenConfirmationModal(formattedDate, time)
-											}
-										>
-											{time}
-										</Button>
-									))}
-								</div>
-							);
-						})}
+					<div dir="ltr" className="lg:self-start">
+						<Title order={2} className="mb-4 text-3xl font-bold lg:text-4xl">
+							{currentDoctor.name}
+						</Title>
+						<div>
+							<div className="mx-5 lg:mx-auto">
+								<Text className="text-[#1B77CB] text-xl lg:text-2xl flex items-center justify-end mb-4">
+									{currentDoctor.specialty}
+									<GiStethoscope
+										size={24}
+										className="ml-2 text-gray-700 scale-x-[-1]"
+									/>
+								</Text>
+								<Text className="text-xl lg:text-2xl flex items-center justify-end text-[#1B77CB] mb-4">
+									الكشفية: {currentDoctor.price}
+									<FcMoneyTransfer size={24} className="ml-2" />
+								</Text>
+							</div>
+							<Stack className="items-center lg:mr-7 lg:items-end">
+								<Rating
+									value={currentDoctor.rating}
+									fractions={2}
+									readOnly
+									size={25}
+									className="scale-x-[-1]"
+								/>
+								<Text className="-mt-2 text-lg lg:text-2xl">
+									التقييم العام من {currentDoctor.totalReviews} زاروا الدكتور
+								</Text>
+							</Stack>
+						</div>
 					</div>
 				</div>
 
-				{currentDoctorIndex < doctors.length - 1 ? (
-					<MdArrowForwardIos
-						className="bg-transparent text-gray-500 cursor-pointer"
-						size={24}
-						style={{ width: 55, height: 55 }}
-						onClick={handleNextDoctor}
-					/>
-				) : (
-					<MdArrowForwardIos
-						className="text-white"
-						size={24}
-						style={{ width: 55, height: 55 }}
-						onClick={handleNextDoctor}
-					/>
-				)}
-
-				<div className="flex-1 text-center lg:text-right mr-5 -mt-14">
-					<Title order={2} className="text-3xl lg:text-4xl font-bold mb-4">
-						{currentDoctor.name}
-					</Title>
-
-					<div className="mx-5 lg:mx-auto">
-						<Text className="text-[#1B77CB] text-xl lg:text-2xl flex items-center justify-end mb-4">
-							{currentDoctor.specialty}
-							<GiStethoscope
+				<div className="flex items-center justify-center flex-nowrap">
+					<div className="ml-auto">
+						{currentDoctorIndex < doctors.length - 1 ? (
+							<MdArrowBackIos
+								className="text-gray-500 rotate-180 bg-transparent cursor-pointer"
 								size={24}
-								className="ml-2 text-gray-700 scale-x-[-1]"
+								style={{ width: 55, height: 55 }}
+								onClick={handleNextDoctor}
 							/>
-						</Text>
-						<Text className="text-xl lg:text-2xl flex items-center justify-end text-[#1B77CB] mb-4">
-							الكشفية: {currentDoctor.price}
-							<FcMoneyTransfer size={24} className="ml-2" />
-						</Text>
+						) : (
+							<MdArrowBackIos
+								className="text-white"
+								size={24}
+								style={{ width: 55, height: 55 }}
+								onClick={handleNextDoctor}
+							/>
+						)}
 					</div>
 
-					<Stack className="lg:mr-7 lg:items-end items-center">
-						<Rating
-							value={currentDoctor.rating}
-							fractions={2}
-							readOnly
-							size={25}
-							className="scale-x-[-1]"
-						/>
-						<Text className="text-xl lg:text-2xl -mt-2">
-							التقييم العام من {currentDoctor.totalReviews} زاروا الدكتور
-						</Text>
-					</Stack>
-				</div>
+					<div className="">
+						<Title
+							order={3}
+							className="mt-5 mb-8 text-2xl font-bold text-center lg:text-4xl lg:mt-0"
+						>
+							احجز موعدك
+						</Title>
+						<div
+							className={`grid justify-self-center grid-cols-${currentDoctor.schedule.length > 3 ? 3 : currentDoctor.schedule.length} gap-4 mb-4 -ml-3 lg:-ml-0 lg:gap-20`}
+						>
+							{currentDoctor.schedule.slice(0, 3).map((daySchedule, index) => {
+								const { day, from, to } = daySchedule;
+								const arabicDay = arabicDays[day as keyof typeof arabicDays];
+								const startHour = parseInt(from.split(":")[0], 10);
+								const endHour = parseInt(to.split(":")[0], 10);
+								const hours = Array.from(
+									{ length: endHour - startHour },
+									(_, i) => startHour + i
+								);
 
-				<Avatar
-					src={currentDoctor.image}
-					alt="Doctor"
-					size={150}
-					className="object-contain lg:self-start mb-20 lg:mt-10"
-				/>
+								return (
+									<div
+										key={daySchedule._id}
+										className="flex flex-col items-end gap-4"
+									>
+										<Badge className="bg-[#6db5de] text-center text-base rounded-lg mb-2 text-black h-10 w-24 font-medium">
+											<span>{arabicDay}</span>
+										</Badge>
+										{hours.map((hour) => (
+											<Button
+												key={hour}
+												variant="filled"
+												color="#ebedf0"
+												className="w-24 mb-2 text-base text-black rounded-lg h-fit"
+												dir="rtl"
+												onClick={() =>
+													handleOpenConfirmationModal(
+														day,
+														getNextDateForDay(day),
+														`${formatHour(hour)}`
+													)
+												}
+											>
+												{formatHour(hour)}
+											</Button>
+										))}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+
+					<div className="mr-auto">
+						{currentDoctorIndex > 0 ? (
+							<MdArrowBackIos
+								className="text-gray-500 bg-transparent cursor-pointer"
+								size={24}
+								style={{ width: 55, height: 55 }}
+								onClick={handlePrevDoctor}
+							/>
+						) : (
+							<MdArrowBackIos
+								className="text-white"
+								size={24}
+								style={{ width: 55, height: 55 }}
+								onClick={handlePrevDoctor}
+							/>
+						)}
+					</div>
+				</div>
 			</div>
 		</div>
 	);

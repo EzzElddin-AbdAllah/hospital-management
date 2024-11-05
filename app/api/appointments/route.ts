@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
 	try {
 		const token = await getToken({ req, secret });

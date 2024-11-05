@@ -1,27 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Avatar, Button, Group, Text, Modal } from "@mantine/core";
-import { RiDeleteBin5Fill } from "react-icons/ri";
+import { Avatar, Button, Group, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useEffect, useState } from "react";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 import NoResSvg from "./NoResSvg";
+import { Doctor } from "@/types/Doctor";
 
-interface Doctor {
-	name: string;
-	specialty: string;
-	image: string;
-	clinic: string;
+interface AppointmentsProps {
+	showCurrent: boolean;
 }
 
-interface Appointment {
+export interface Appointment {
 	_id: string;
 	doctor: Doctor;
 	date: string;
 	time: string;
-}
-
-interface AppointmentsProps {
-	showCurrent: boolean;
 }
 
 const Appointments = ({ showCurrent }: AppointmentsProps) => {
@@ -70,14 +64,16 @@ const Appointments = ({ showCurrent }: AppointmentsProps) => {
 
 		const normalizedTime = parseArabicTime(appointment.time);
 
-		const timeParts = normalizedTime.match(/(\d+):(\d+)(AM|PM)/);
+		const timeParts = normalizedTime.match(
+			/(\d{1,2})(?::(\d{2}))?(AM|PM|am|pm)/
+		);
 		if (!timeParts) {
 			return false;
 		}
 
 		let [, hour, minute, period] = timeParts;
 		let intHour = parseInt(hour);
-		let intMinute = parseInt(minute);
+		let intMinute = parseInt(minute) || 0;
 
 		if (period === "PM" && intHour < 12) intHour += 12;
 		if (period === "AM" && intHour === 12) intHour = 0;
@@ -87,6 +83,9 @@ const Appointments = ({ showCurrent }: AppointmentsProps) => {
 		const now = new Date();
 		now.setSeconds(0, 0);
 
+		console.log(appointmentDate);
+		console.log(now);
+
 		return showCurrent ? appointmentDate >= now : appointmentDate < now;
 	});
 
@@ -94,8 +93,6 @@ const Appointments = ({ showCurrent }: AppointmentsProps) => {
 		setSelectedAppointmentId(id);
 		openDeleteModal();
 	};
-
-	console.log(filteredAppointments);
 
 	const handleDelete = async () => {
 		if (!selectedAppointmentId) return;
@@ -157,9 +154,9 @@ const Appointments = ({ showCurrent }: AppointmentsProps) => {
 							</Button>
 						)}
 
-						<Group className="justify-end flex-nowrap pr-3 h-fit">
-							<div className="flex flex-col text-right gap-1">
-								<Text className="lg:text-xl text-lg font-bold">
+						<Group className="justify-end pr-3 flex-nowrap h-fit">
+							<div className="flex flex-col gap-1 text-right">
+								<Text className="text-lg font-bold lg:text-xl">
 									{appointment.doctor.clinic}
 								</Text>
 								<Text className="text-[#011A77] lg:text-lg text-md">
@@ -169,8 +166,10 @@ const Appointments = ({ showCurrent }: AppointmentsProps) => {
 									{appointment.doctor.specialty}
 								</Text>
 
-								<Group className="text-gray-500 justify-end gap-1">
-									<Text className="text-sm text-black">{appointment.time}</Text>
+								<Group className="justify-end gap-1 text-gray-500">
+									<Text dir="rtl" className="text-sm text-black">
+										{appointment.time}
+									</Text>
 									<Text className="text-sm text-black">{appointment.date}</Text>
 									<span role="img" aria-label="calendar">
 										📅

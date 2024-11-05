@@ -9,10 +9,19 @@ import { FaFacebook, FaLink, FaLinkedin } from "react-icons/fa";
 const Footer = () => {
 	const pathname = usePathname();
 	const [isHomePage, setIsHomePage] = useState(true);
+	const [isSpecialPage, setIsSpecialPage] = useState(false);
 
 	useEffect(() => {
 		setIsHomePage(pathname === "/");
 	}, [pathname]);
+
+	useEffect(() => {
+		setIsSpecialPage(
+			pathname.includes("/auth") || pathname.includes("/dashboard")
+		);
+	}, [pathname]);
+
+	if (pathname === "/dashboard") return null;
 
 	return (
 		<footer

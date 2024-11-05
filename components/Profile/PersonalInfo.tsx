@@ -92,7 +92,7 @@ const PersonalInfoModal = () => {
 
 	useEffect(() => {
 		fetchUserData();
-	}, []);
+	});
 
 	return (
 		<>
@@ -103,10 +103,10 @@ const PersonalInfoModal = () => {
 					</Text>
 					<Divider my="md" color="#011A77" />
 				</div>
-				<Text className="text-gray-500 mb-4">{userData?.nationality}</Text>
-				<Text className="text-gray-500 mb-4">{userData?.phone}</Text>
-				<Text className="text-gray-500 mb-4">{userData?.age} سنه</Text>
-				<Text className="text-gray-500 mb-4">{userData?.gender}</Text>
+				<Text className="mb-4 text-gray-500">{userData?.nationality}</Text>
+				<Text className="mb-4 text-gray-500">{userData?.phone}</Text>
+				<Text className="mb-4 text-gray-500">{userData?.age} سنه</Text>
+				<Text className="mb-4 text-gray-500">{userData?.gender}</Text>
 
 				<Button
 					onClick={open}

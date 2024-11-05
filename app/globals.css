@@ -7,3 +7,10 @@
 }
 
 @import "@mantine/core/styles.css";
+
+@layer base {
+  :root {
+
+		--radius: 0.5rem
+	}
+}

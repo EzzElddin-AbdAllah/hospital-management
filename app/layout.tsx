@@ -3,6 +3,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "@mantine/carousel/styles.css";
+import "@mantine/dates/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import type { Metadata } from "next";

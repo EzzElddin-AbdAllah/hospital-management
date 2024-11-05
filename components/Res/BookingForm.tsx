@@ -53,7 +53,7 @@ const BookingForm = () => {
 			setErrorMessage(null);
 
 			const res = await signIn("credentials", {
-				phone: data.phone,
+				identifier: data.phone,
 				callbackUrl: "/services",
 			});
 

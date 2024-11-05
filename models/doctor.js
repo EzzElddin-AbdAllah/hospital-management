@@ -5,6 +5,11 @@ const doctorSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	phone: {
+		type: String,
+		required: true,
+		unique: true,
+	},
 	specialty: {
 		type: String,
 		required: true,
@@ -31,9 +36,9 @@ const doctorSchema = new mongoose.Schema({
 	},
 	schedule: [
 		{
-			day: String, // e.g., "اليوم", "غداً"
-			date: String, // e.g., "1/8"
-			times: [String], // e.g., ["1:00م", "2:00م"]
+			day: { type: String, required: true },
+			from: { type: String, required: true },
+			to: { type: String, required: true },
 		},
 	],
 });
