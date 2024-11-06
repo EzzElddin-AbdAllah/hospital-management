@@ -33,7 +33,7 @@ const Footer = () => {
 		>
 			<Group
 				py={80}
-				className="lg:ml-40 lg:justify-between lg:px-20 justify-center lg:flex-row lg:items-start flex-col-reverse items-center gap-14"
+				className="flex-col-reverse items-center justify-center lg:ml-40 lg:justify-between lg:px-20 lg:flex-row lg:items-start gap-14"
 			>
 				<Stack align="start" gap={100} className="lg:-mr-32">
 					<Anchor
@@ -79,7 +79,7 @@ const Footer = () => {
 				</Anchor>
 
 				<Stack spacing={8} align="start" className="hidden lg:flex">
-					<Text className="font-bold text-xl">الأخبار</Text>
+					<Text className="text-xl font-bold">الأخبار</Text>
 					<Anchor
 						href="#"
 						className={`font-bold text-xl ${
@@ -91,7 +91,7 @@ const Footer = () => {
 				</Stack>
 
 				<Stack spacing={8} align="start" className="hidden lg:flex">
-					<Text className="font-bold text-xl">روابط مهمة</Text>
+					<Text className="text-xl font-bold">روابط مهمة</Text>
 					<Anchor
 						href="#"
 						className={`text-lg ${
@@ -118,7 +118,7 @@ const Footer = () => {
 					</Anchor>
 				</Stack>
 
-				<Stack className="lg:mt-12 justify-center">
+				<Stack className="justify-center lg:mt-12">
 					<Text
 						className={`font-bold text-3xl ${
 							isHomePage ? "text-blue-900" : "text-white"

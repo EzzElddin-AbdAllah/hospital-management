@@ -12,6 +12,7 @@ import CalendarDemo from "./calendar-demo";
 
 interface Props {
 	setTotalappointments: (totalappointments: number) => void;
+	setAppointmentsToday: (appointmentsToday: number) => void;
 }
 
 interface Appointment {
@@ -24,7 +25,7 @@ interface Appointment {
 	price: string;
 }
 
-const ResTable = ({ setTotalappointments }: Props) => {
+const ResTable = ({ setTotalappointments, setAppointmentsToday }: Props) => {
 	const [appointments, setAppointments] = useState<Appointment[]>([]);
 	const [filteredAppointments, setFilteredAppointments] = useState<
 		Appointment[]
@@ -47,6 +48,18 @@ const ResTable = ({ setTotalappointments }: Props) => {
 		new Set(appointments?.map((a) => a.DoctorName))
 	);
 
+	const isToday = (dateString: string) => {
+		const today = new Date();
+		const [day, month, year] = dateString.split("/").map(Number);
+		const appointmentDate = new Date(year, month - 1, day);
+
+		return (
+			appointmentDate.getDate() === today.getDate() &&
+			appointmentDate.getMonth() === today.getMonth() &&
+			appointmentDate.getFullYear() === today.getFullYear()
+		);
+	};
+
 	useEffect(() => {
 		const fetchAppointments = async () => {
 			try {
@@ -55,6 +68,11 @@ const ResTable = ({ setTotalappointments }: Props) => {
 				setAppointments(data.appointments);
 				setFilteredAppointments(data.appointments);
 				setTotalappointments(data.appointments.length);
+				setAppointmentsToday(
+					data.appointments?.filter((appointment: Appointment) =>
+						isToday(appointment.date)
+					).length
+				);
 			} catch (error) {
 				console.error("Error fetching appointments:", error);
 			}

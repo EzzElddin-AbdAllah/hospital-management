@@ -10,6 +10,7 @@ import Stats from "./Stats";
 const DashboardMain = () => {
 	const [totalDoctors, setTotalDoctors] = useState(0);
 	const [totalappointments, setTotalappointments] = useState(0);
+	const [appointmentsToday, setAppointmentsToday] = useState(0);
 
 	return (
 		<Grid dir="rtl" gutter={0}>
@@ -20,10 +21,14 @@ const DashboardMain = () => {
 				<Stats
 					totalDoctors={totalDoctors}
 					totalappointments={totalappointments}
+					appointmentsToday={appointmentsToday}
 				/>
 				<Grid dir="rtl" gutter={"lg"} className="mt-5 xl:mx-8">
 					<Grid.Col span={{ base: 12, xl: 6.5 }}>
-						<ResTable setTotalappointments={setTotalappointments} />
+						<ResTable
+							setTotalappointments={setTotalappointments}
+							setAppointmentsToday={setAppointmentsToday}
+						/>
 					</Grid.Col>
 					<Grid.Col span={{ base: 12, xl: 5.5 }}>
 						<DoctorsTable setTotalDoctors={setTotalDoctors} />

@@ -1,13 +1,32 @@
 import { Group } from "@mantine/core";
-import React from "react";
+import { useEffect, useState } from "react";
 import CircleCard from "./CircleCard";
 
 interface Props {
 	totalDoctors: number;
 	totalappointments: number;
+	appointmentsToday: number;
 }
 
-const Stats = ({ totalDoctors, totalappointments }: Props) => {
+const Stats = ({
+	totalDoctors,
+	totalappointments,
+	appointmentsToday,
+}: Props) => {
+	const [totalPatients, setTotalPatients] = useState(0);
+	useEffect(() => {
+		const fetchotalPatients = async () => {
+			try {
+				const data = await fetch("/api/admin/user");
+				const totalUsers = await data.json();
+				setTotalPatients(totalUsers.totalUsers - 1);
+			} catch (error) {
+				console.error("Error fetching totalPatients:", error);
+			}
+		};
+
+		fetchotalPatients();
+	}, []);
 	const stats = [
 		{
 			label: "اجمالي الاطباء",
@@ -19,17 +38,17 @@ const Stats = ({ totalDoctors, totalappointments }: Props) => {
 			label: "اجمالي الحجوزات",
 			number: totalappointments,
 			circleColor: "#011A77",
-			progress: 80,
+			progress: 100,
 		},
 		{
-			label: "اجمالي الحجوزات الملغيه",
-			number: 0,
+			label: "اجمالي عدد المرضى",
+			number: totalPatients,
 			circleColor: "#6DB5DE",
 			progress: 100,
 		},
 		{
-			label: "اجمالي الحجوزات التي تمت",
-			number: 0,
+			label: "عدد الحجوزات اليوم",
+			number: appointmentsToday,
 			circleColor: "#011A77",
 			progress: 100,
 		},

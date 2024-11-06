@@ -320,7 +320,7 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
 			</div>
 
 			<Pagination
-				total={Math.ceil(doctors.length / 5)}
+				total={Math.ceil(doctors?.length / 5)}
 				value={activePage}
 				onChange={setPage}
 				className="flex justify-center mt-4"

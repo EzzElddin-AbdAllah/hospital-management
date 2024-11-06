@@ -92,7 +92,7 @@ const PersonalInfoModal = () => {
 
 	useEffect(() => {
 		fetchUserData();
-	});
+	}, []);
 
 	return (
 		<>

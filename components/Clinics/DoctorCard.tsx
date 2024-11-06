@@ -253,21 +253,12 @@ const DoctorCard = () => {
 
 				<div className="flex items-center justify-center flex-nowrap">
 					<div className="ml-auto">
-						{currentDoctorIndex < doctors.length - 1 ? (
-							<MdArrowBackIos
-								className="text-gray-500 rotate-180 bg-transparent cursor-pointer"
-								size={24}
-								style={{ width: 55, height: 55 }}
-								onClick={handleNextDoctor}
-							/>
-						) : (
-							<MdArrowBackIos
-								className="text-white"
-								size={24}
-								style={{ width: 55, height: 55 }}
-								onClick={handleNextDoctor}
-							/>
-						)}
+						<MdArrowBackIos
+							className={`text-gray-500 rotate-180 bg-transparent cursor-pointer ${currentDoctorIndex < doctors.length - 1 ? "visible" : "invisible"}`}
+							size={24}
+							style={{ width: 55, height: 55 }}
+							onClick={handleNextDoctor}
+						/>
 					</div>
 
 					<div className="">
@@ -323,21 +314,12 @@ const DoctorCard = () => {
 					</div>
 
 					<div className="mr-auto">
-						{currentDoctorIndex > 0 ? (
-							<MdArrowBackIos
-								className="text-gray-500 bg-transparent cursor-pointer"
-								size={24}
-								style={{ width: 55, height: 55 }}
-								onClick={handlePrevDoctor}
-							/>
-						) : (
-							<MdArrowBackIos
-								className="text-white"
-								size={24}
-								style={{ width: 55, height: 55 }}
-								onClick={handlePrevDoctor}
-							/>
-						)}
+						<MdArrowBackIos
+							className={`text-gray-500 bg-transparent cursor-pointer ${currentDoctorIndex > 0 ? "visible" : "invisible"}`}
+							size={24}
+							style={{ width: 55, height: 55 }}
+							onClick={handlePrevDoctor}
+						/>
 					</div>
 				</div>
 			</div>

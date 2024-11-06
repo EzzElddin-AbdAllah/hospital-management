@@ -38,6 +38,7 @@ const DashboardAuth = () => {
 				identifier: data.username,
 				password: data.password,
 				callbackUrl: "/dashboard",
+				redirect: false,
 			});
 
 			if (res?.error) {
@@ -186,7 +187,7 @@ const DashboardAuth = () => {
 				/>
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className="flex flex-col items-start self-end gap-5 mt-10 p-5"
+					className="flex flex-col items-start self-end gap-5 p-5 mt-10"
 				>
 					<TextInput
 						{...register("username")}
