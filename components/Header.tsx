@@ -1,26 +1,17 @@
 "use client";
 
-import { Anchor, Button, Drawer, Group, Text, Menu } from "@mantine/core";
+import { Anchor, Button, Drawer, Group, Menu, Text } from "@mantine/core";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { IoIosClose } from "react-icons/io";
-import { signOut, useSession, signIn } from "next-auth/react";
 
 const Header = () => {
 	const { data: session } = useSession();
 	const pathname = usePathname();
-	const [isSpecialPage, setIsSpecialPage] = useState(false);
 	const [opened, setOpened] = useState(false);
-
-	useEffect(() => {
-		setIsSpecialPage(
-			pathname === "/" ||
-				pathname.includes("/auth") ||
-				pathname.includes("/dashboard")
-		);
-	}, [pathname]);
 
 	const toggleDrawer = () => {
 		setOpened(!opened);
@@ -38,8 +29,8 @@ const Header = () => {
 
 	return (
 		<>
-			<header className="absolute w-full z-10">
-				<Group justify="space-between" className="px-7 py-10 lg:px-14 lg:py-6">
+			<header className="absolute z-10 w-full">
+				<Group justify="space-between" className="py-10 px-7 lg:px-14 lg:py-6">
 					<Group gap={50} className="hidden lg:flex">
 						{session ? (
 							<Menu>
@@ -48,23 +39,19 @@ const Header = () => {
 										variant="filled"
 										size="md"
 										radius="md"
-										className={`text-lg font-normal ${
-											isSpecialPage
-												? "text-[#F2F2F7] bg-[#007AFF]"
-												: "text-[#007AFF] bg-white"
-										}`}
+										className={"text-lg font-normal text-[#007AFF] bg-white"}
 									>
 										{session.user?.name}
 									</Button>
 								</Menu.Target>
 								<Menu.Dropdown>
 									<Menu.Item
-										className="text-right text-sm"
+										className="text-sm text-right"
 										onClick={handleSignOut}
 									>
 										تسجيل الخروج
 									</Menu.Item>
-									<Menu.Item className="text-right text-sm">
+									<Menu.Item className="text-sm text-right">
 										<Link href="/profile">الصفحة الشخصية</Link>
 									</Menu.Item>
 								</Menu.Dropdown>
@@ -74,57 +61,33 @@ const Header = () => {
 								variant="filled"
 								size="md"
 								radius="md"
-								className={`text-lg font-normal ${
-									isSpecialPage
-										? "text-[#F2F2F7] bg-[#007AFF]"
-										: "text-[#007AFF] bg-white"
-								}`}
+								className={"text-lg font-normal text-[#007AFF] bg-white"}
 								onClick={handleSignIn}
 							>
 								تسجيل
 							</Button>
 						)}
 
-						<Anchor
-							href="#"
-							className={`text-lg ${
-								isSpecialPage ? "text-[#007AFF]" : "text-white"
-							}`}
-						>
+						<Anchor href="#" className={"text-lg text-white"}>
 							الدكاترة
 						</Anchor>
-						<Anchor
-							href="#"
-							className={`text-lg ${
-								isSpecialPage ? "text-[#007AFF]" : "text-white"
-							}`}
-						>
+						<Anchor href="#" className={"text-lg text-white"}>
 							العروض
 						</Anchor>
-						<Link href="/services">
-							<Text
-								className={`text-lg hover:underline ${
-									isSpecialPage ? "text-[#007AFF]" : "text-white"
-								}`}
-							>
+						<Link href="/">
+							<Text className={"text-lg text-white hover:underline"}>
 								الرئيسية
 							</Text>
 						</Link>
 					</Group>
 
-					<Group className="w-full justify-between lg:w-auto">
+					<Group className="justify-between w-full lg:w-auto">
 						<HiOutlineMenuAlt2
 							size={35}
 							onClick={toggleDrawer}
-							className={`lg:hidden ${
-								isSpecialPage ? "text-[#007AFF]" : "text-white"
-							}`}
+							className="text-white lg:hidden"
 						/>
-						<Text
-							className={`font-roboto font-bold text-4xl ${
-								isSpecialPage ? "text-[#007AFF]" : "text-white"
-							}`}
-						>
+						<Text className="text-4xl font-bold text-white font-roboto">
 							لوجو
 						</Text>
 					</Group>
@@ -138,7 +101,7 @@ const Header = () => {
 				withCloseButton={false}
 				className="items-center"
 			>
-				<div className="absolute top-0 left-0 h-32 w-full flex items-center justify-start">
+				<div className="absolute top-0 left-0 flex items-center justify-start w-full h-32">
 					<svg
 						width="300"
 						height="300"
@@ -151,11 +114,11 @@ const Header = () => {
 					<IoIosClose
 						size={50}
 						onClick={toggleDrawer}
-						className="text-white absolute top-0 mt-6"
+						className="absolute top-0 mt-6 text-white"
 					/>
 				</div>
 
-				<div className="flex flex-col justify-center items-center gap-7 mt-28 text-center">
+				<div className="flex flex-col items-center justify-center text-center gap-7 mt-28">
 					<Anchor href="/" className="text-lg font-bold text-[#485B78]">
 						الرئيسية
 					</Anchor>
@@ -180,7 +143,7 @@ const Header = () => {
 					{session ? (
 						<Button
 							variant="gradient"
-							className="text-lg font-bol text-white px-1"
+							className="px-1 text-lg text-white font-bol"
 							onClick={handleSignOut}
 						>
 							تسجيل الخروج
@@ -196,7 +159,7 @@ const Header = () => {
 					)}
 				</div>
 
-				<div className="h-40 w-full -ml-5">
+				<div className="w-full h-40 -ml-5">
 					<svg
 						width="300"
 						height="300"

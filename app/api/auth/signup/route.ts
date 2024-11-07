@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import User from "@/models/User";
+import User from "@/models/user";
 import { NextResponse } from "next/server";
 import { signIn } from "next-auth/react";
 
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
 		await signIn("credentials", {
 			phone: newUser.phone,
-			callbackUrl: "/services",
+			callbackUrl: "/",
 			redirect: false,
 		});
 

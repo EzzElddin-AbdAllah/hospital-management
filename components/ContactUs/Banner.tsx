@@ -5,10 +5,12 @@ import React from "react";
 const Banner = () => {
 	return (
 		<Container className="min-w-full p-0">
-			<div className="relative flex justify-between items-center">
+			<div className="relative flex items-center justify-between">
 				<Image
 					className="absolute top-0 left-0 -z-10"
-					src={"/res-blue-bg.png"}
+					src={
+						"https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/res-blue-bg_pzwuhs.png"
+					}
 					width={0}
 					height={0}
 					sizes="100vw"
@@ -16,7 +18,7 @@ const Banner = () => {
 					alt="res-blue-bg"
 				/>
 
-				<div className="lg:mt-52 hidden lg:block">
+				<div className="hidden lg:mt-52 lg:block">
 					<svg
 						width="791"
 						height="567"
@@ -636,7 +638,7 @@ const Banner = () => {
 					</svg>
 				</div>
 
-				<Text className="font-bold text-4xl lg:text-7xl text-white mx-auto mb-20 lg:mr-52 mt-72">
+				<Text className="mx-auto mb-20 text-4xl font-bold text-white lg:text-7xl lg:mr-52 mt-72">
 					تواصل معنا
 				</Text>
 			</div>

@@ -1,20 +1,20 @@
-import DoctorBrief from "@/components/Home/DoctorBrief";
-import Intro from "@/components/Home/Intro";
-import News from "@/components/Home/News";
-import OfferCard from "@/components/Home/OfferCard";
-import SearchDoctor from "@/components/Home/SearchDoctor";
+import Banner from "@/components/Home/Banner";
+import DoctorBookingSearch from "@/components/Home/DoctorBookingSearch";
+import DoctorProfile from "@/components/Home/DoctorProfile";
+import MoreInfo from "@/components/Home/MoreInfo";
+import SpecialOffer from "@/components/Home/SpecialOffer";
 import { Stack } from "@mantine/core";
 
-const Home = () => {
+const page = () => {
 	return (
-		<Stack gap={40} mt={200} mb={60}>
-			<Intro />
-			<OfferCard />
-			<SearchDoctor />
-			<DoctorBrief />
-			<News />
+		<Stack>
+			<Banner />
+			<SpecialOffer />
+			<DoctorBookingSearch />
+			<DoctorProfile />
+			<MoreInfo />
 		</Stack>
 	);
 };
 
-export default Home;
+export default page;

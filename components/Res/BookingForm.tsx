@@ -54,7 +54,7 @@ const BookingForm = () => {
 
 			const res = await signIn("credentials", {
 				identifier: data.phone,
-				callbackUrl: "/services",
+				callbackUrl: "/",
 			});
 
 			if (res?.error) {
@@ -71,12 +71,12 @@ const BookingForm = () => {
 			className="flex flex-col items-center justify-center bg-[#f6f6fa] -mt-80"
 			dir="rtl"
 		>
-			<div className="w-full max-w-5xl bg-white mt-10 p-5 z-20">
-				<Title order={2} className="mb-20 mt-10 font-bold text-5xl text-right">
+			<div className="z-20 w-full max-w-5xl p-5 mt-10 bg-white">
+				<Title order={2} className="mt-10 mb-20 text-5xl font-bold text-right">
 					إنشاء حساب جديد
 				</Title>
 
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-16 mb-32">
+				<form onSubmit={handleSubmit(onSubmit)} className="mb-32 space-y-16">
 					<TextInput
 						placeholder="الاسم"
 						{...register("name")}

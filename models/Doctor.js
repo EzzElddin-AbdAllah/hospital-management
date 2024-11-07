@@ -32,7 +32,8 @@ const doctorSchema = new mongoose.Schema({
 	},
 	image: {
 		type: String,
-		default: "/doctor-1.png",
+		default:
+			"https://res.cloudinary.com/dmkoec84b/image/upload/v1728984837/doctor-1_w7kizc.png",
 	},
 	schedule: [
 		{

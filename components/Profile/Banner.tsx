@@ -27,10 +27,12 @@ const Banner = () => {
 
 	return (
 		<Container className="relative min-w-full p-0">
-			<div className="relative flex justify-center items-center lg:h-screen h-96 bg-black bg-opacity-65">
+			<div className="relative flex items-center justify-center bg-black lg:h-screen h-96 bg-opacity-65">
 				<Image
 					className="absolute top-0 left-0 -z-20"
-					src={"/waiting-area.png"}
+					src={
+						"https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/waiting-area_kpbbij.png"
+					}
 					width={0}
 					height={0}
 					sizes="100vw"
@@ -56,7 +58,7 @@ const Banner = () => {
 			</div>
 
 			<div className="absolute bottom-0 w-full">
-				<div className="flex justify-center relative lg:top-32 top-16">
+				<div className="relative flex justify-center lg:top-32 top-16">
 					<div className="flex items-center justify-center text-[#011A77] lg:text-5xl text-xl font-bold bg-[#D9D9D9] border-[5px] border-[#1B77CB] rounded-full lg:w-56 lg:h-56 w-28 h-28">
 						{userData?.name.split(" ")[0]}
 					</div>

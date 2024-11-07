@@ -8,7 +8,9 @@ const Banner = () => {
 			<div className="lg:relative flex flex-col lg:flex-row justify-center lg:justify-between items-center">
 				<Image
 					className="absolute top-0 left-0 -z-10"
-					src={"/res-blue-bg.png"}
+					src={
+						"https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/res-blue-bg_pzwuhs.png"
+					}
 					width={0}
 					height={0}
 					sizes="100vw"

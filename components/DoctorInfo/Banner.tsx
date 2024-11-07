@@ -8,7 +8,9 @@ const Banner = () => {
 			<Group className="bg-white rounded-[120px] pb-4 pl-2 lg:-ml-20 lg:-mt-10 w-[45%] lg:w-auto">
 				<Image
 					className="rounded-b-[120px]"
-					src={"/doctor-2-full.png"}
+					src={
+						"https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/doctor-2-full_h2jsfk.png"
+					}
 					width={280}
 					height={280}
 					alt="doctor-full"
@@ -31,13 +33,13 @@ const Banner = () => {
 			</div>
 
 			<Stack align="center" className="">
-				<Text className="text-white text-5xl lg:text-7xl font-bold">
+				<Text className="text-5xl font-bold text-white lg:text-7xl">
 					احجز الآن
 				</Text>
-				<Text className="text-white text-xl lg:text-2xl font-bold mt-5">
+				<Text className="mt-5 text-xl font-bold text-white lg:text-2xl">
 					دكتور طلال اسماعيل
 				</Text>
-				<Text className="text-white text-lg -mt-2">أخصائي نطق وتخاطب</Text>
+				<Text className="-mt-2 text-lg text-white">أخصائي نطق وتخاطب</Text>
 				<Badge
 					color="white"
 					size="sm"
@@ -46,7 +48,7 @@ const Banner = () => {
 							<FaPhoneAlt size={15} className="" />
 						</div>
 					}
-					className="flex justify-center items-center text-center lg:px-8 py-5 rounded-full"
+					className="flex items-center justify-center py-5 text-center rounded-full lg:px-8"
 				>
 					<Text className="text-lg lg:text-xl text-[#1B77CB]">
 						+971325445622
