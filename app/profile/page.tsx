@@ -24,7 +24,7 @@ const Profile = () => {
 	);
 };
 
-const page = () => {
+const Page = () => {
 	const { data: session, status } = useSession();
 	const router = useRouter();
 
@@ -43,4 +43,4 @@ const page = () => {
 	return <Profile />;
 };
 
-export default page;
+export default Page;
