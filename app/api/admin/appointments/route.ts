@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import Appointment from "@/models/Appointment";
 import Doctor from "@/models/Doctor";
-import User from "@/models/user";
+import User from "@/models/User";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
