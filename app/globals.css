@@ -6,7 +6,11 @@
 @import "@mantine/core/styles.css";
 
 @layer base {
-	:root {
-		--radius: 0.5rem;
-	}
+  :root {
+    --radius: 0.5rem;
+    --color-accent-light: 109 181 222;
+    --color-accent-medium: 27 119 203;
+    --color-accent-dark: 1 26 119;
+    --color-error: 255 0 0;
+  }
 }

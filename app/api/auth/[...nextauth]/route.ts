@@ -1,72 +1,3 @@
-// import dbConnect from "@/lib/dbConnect";
-// import User from "@/models/User";
-// import NextAuth from "next-auth";
-// import CredentialsProvider from "next-auth/providers/credentials";
-
-// const handler = NextAuth({
-// 	providers: [
-// 		CredentialsProvider({
-// 			name: "Credentials",
-// 			credentials: {
-// 				phone: { label: "Phone", type: "text" },
-// 			},
-// 			async authorize(credentials) {
-// 				await dbConnect();
-
-// 				const user = await User.findOne({ phone: credentials?.phone });
-
-// 				if (!user || !credentials) {
-// 					throw new Error("Invalid phone number");
-// 				}
-
-// 				return {
-// 					id: user._id.toString(),
-// 					phone: user.phone,
-// 					name: user.name,
-// 					role: user.role,
-// 				};
-// 			},
-// 		}),
-// 	],
-// 	callbacks: {
-// 		async jwt({ token, user }) {
-// 			await dbConnect();
-// 			let currUser = await User.findOne({
-// 				phone: token.phone ? token.phone : user?.phone,
-// 			});
-
-// 			token.userId = currUser?._id?.toString() || "";
-// 			token.name = currUser.name || "";
-// 			token.phone = currUser.phone || "";
-// 			token.role = currUser.role || "";
-
-// 			return token;
-// 		},
-// 		session({ session, token }) {
-// 			if (!token) {
-// 				return session;
-// 			}
-
-// 			session.user = {
-// 				name: token.name as string,
-// 				phone: token.phone as string,
-// 				role: token.role as string,
-// 			};
-
-// 			return session;
-// 		},
-// 	},
-// 	pages: {
-// 		signIn: "/res",
-// 	},
-// 	session: {
-// 		strategy: "jwt",
-// 	},
-// 	secret: process.env.NEXTAUTH_SECRET,
-// });
-
-// export { handler as GET, handler as POST };
-
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import NextAuth from "next-auth";
@@ -74,79 +5,79 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 const handler = NextAuth({
-	providers: [
-		CredentialsProvider({
-			name: "Credentials",
-			credentials: {
-				identifier: { label: "Phone or Username", type: "text" },
-				password: { label: "Password", type: "password", required: false },
-			},
-			async authorize(credentials) {
-				await dbConnect();
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        identifier: { label: "Phone or Username", type: "text" },
+        password: { label: "Password", type: "password", required: false },
+      },
+      async authorize(credentials) {
+        await dbConnect();
 
-				const { identifier, password } = credentials || {};
+        const { identifier, password } = credentials || {};
 
-				let user;
+        let user;
 
-				if (/^\d+$/.test(identifier!)) {
-					user = await User.findOne({ phone: identifier });
+        if (/^\d+$/.test(identifier!)) {
+          user = await User.findOne({ phone: identifier });
 
-					if (!user) {
-						throw new Error("Invalid phone number");
-					}
-				} else {
-					user = await User.findOne({ name: identifier, role: "admin" });
+          if (!user) {
+            throw new Error("Invalid phone number");
+          }
+        } else {
+          user = await User.findOne({ name: identifier, role: "admin" });
 
-					if (!user) {
-						throw new Error("Invalid username");
-					}
+          if (!user) {
+            throw new Error("Invalid username");
+          }
 
-					const isPasswordValid = await bcrypt.compare(
-						password!,
-						user.password
-					);
-					if (!isPasswordValid) {
-						throw new Error("Invalid password");
-					}
-				}
+          const isPasswordValid = await bcrypt.compare(
+            password!,
+            user.password,
+          );
+          if (!isPasswordValid) {
+            throw new Error("Invalid password");
+          }
+        }
 
-				return {
-					id: user._id.toString(),
-					name: user.name,
-					phone: user.phone || "",
-					role: user.role,
-				};
-			},
-		}),
-	],
-	callbacks: {
-		async jwt({ token, user }) {
-			if (user) {
-				token.userId = user.id;
-				token.name = user.name;
-				token.phone = user.phone;
-				token.role = user.role;
-			}
-			return token;
-		},
-		async session({ session, token }) {
-			if (token) {
-				session.user = {
-					name: token.name as string,
-					phone: token.phone as string,
-					role: token.role as string,
-				};
-			}
-			return session;
-		},
-	},
-	pages: {
-		signIn: "/res",
-	},
-	session: {
-		strategy: "jwt",
-	},
-	secret: process.env.NEXTAUTH_SECRET,
+        return {
+          id: user._id.toString(),
+          name: user.name,
+          phone: user.phone || "",
+          role: user.role,
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.userId = user.id;
+        token.name = user.name;
+        token.phone = user.phone;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          name: token.name as string,
+          phone: token.phone as string,
+          role: token.role as string,
+        };
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/res",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };

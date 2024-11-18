@@ -1,7 +1,7 @@
 import SignUpForm from "@/components/auth/SignUpForm";
 
 const page = () => {
-	return <SignUpForm />;
+  return <SignUpForm />;
 };
 
 export default page;

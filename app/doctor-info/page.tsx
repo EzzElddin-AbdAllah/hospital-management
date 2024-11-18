@@ -6,14 +6,14 @@ import { Stack } from "@mantine/core";
 import React from "react";
 
 const page = () => {
-	return (
-		<Stack>
-			<Banner />
-			<DoctorReviewCard />
-			<AboutDoctor />
-			<ResCard />
-		</Stack>
-	);
+  return (
+    <Stack>
+      <Banner />
+      <DoctorReviewCard />
+      <AboutDoctor />
+      <ResCard />
+    </Stack>
+  );
 };
 
 export default page;

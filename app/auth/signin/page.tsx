@@ -1,7 +1,7 @@
 import SignInForm from "@/components/auth/SignInForm";
 
 const page = () => {
-	return <SignInForm />;
+  return <SignInForm />;
 };
 
 export default page;
