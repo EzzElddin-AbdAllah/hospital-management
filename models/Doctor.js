@@ -42,6 +42,15 @@ const doctorSchema = new mongoose.Schema({
       to: { type: String, required: true },
     },
   ],
+  certificates: [
+    {
+      title: { type: String, required: true },
+    },
+  ],
+  intro: {
+    type: String,
+    required: true,
+  },
 });
 
 const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);

@@ -3,7 +3,13 @@ import { FaQuoteRight } from "react-icons/fa";
 import { FcMoneyTransfer } from "react-icons/fc";
 import { GiStethoscope } from "react-icons/gi";
 
-const DoctorReviewCard = () => {
+interface Props {
+  name?: string;
+  price?: number;
+  specialty?: string;
+}
+
+const DoctorReviewCard = ({ name, price, specialty }: Props) => {
   return (
     <div className="mx-5 flex justify-center lg:mx-10">
       <Card
@@ -18,11 +24,11 @@ const DoctorReviewCard = () => {
         {/* Doctor's Information */}
         <div className="p-8 text-right">
           <Title order={2} className="mb-4 text-2xl font-bold lg:text-4xl">
-            دكتور طلال اسماعيل
+            {name}
           </Title>
 
           <Text className="mb-4 flex items-center justify-end text-lg text-color-accent-medium lg:text-2xl">
-            أخصائي أمراض جلدية وتجميل وليزر
+            {specialty}
             <GiStethoscope
               size={24}
               className="ml-2 scale-x-[-1] text-gray-700"
@@ -30,7 +36,7 @@ const DoctorReviewCard = () => {
           </Text>
 
           <Text className="mb-4 flex items-center justify-end text-lg text-color-accent-medium lg:text-2xl">
-            الكشيفة: 100 درهم اماراتي
+            الكشيفة: {price} درهم اماراتي
             <FcMoneyTransfer size={24} className="ml-2" />
           </Text>
 

@@ -11,7 +11,7 @@ const MoreInfo = () => {
       <Stack align="center">
         <Image
           className="lg:hidden"
-          src="/medical-tools.jpeg"
+          src="https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/medical-tools_rsumoe.jpg"
           width={200}
           height={200}
           alt="Offer Image"
@@ -34,7 +34,7 @@ const MoreInfo = () => {
 
       <Image
         className="mr-5 hidden lg:block"
-        src="/medical-tools.jpeg"
+        src="https://res.cloudinary.com/dmkoec84b/image/upload/v1728984839/medical-tools_rsumoe.jpg"
         width={400}
         height={400}
         alt="Offer Image"

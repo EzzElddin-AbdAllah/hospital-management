@@ -4,8 +4,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, phone, specialty, clinic, price, schedule } =
-      await req.json();
+    const {
+      name,
+      phone,
+      specialty,
+      clinic,
+      price,
+      schedule,
+      certificates,
+      intro,
+    } = await req.json();
 
     if (
       !name ||
@@ -13,7 +21,9 @@ export async function POST(req: NextRequest) {
       !specialty ||
       !clinic ||
       !price ||
-      !Array.isArray(schedule)
+      !Array.isArray(schedule) ||
+      !Array.isArray(certificates) ||
+      !intro
     ) {
       return NextResponse.json(
         { error: "Missing required fields." },
@@ -23,12 +33,28 @@ export async function POST(req: NextRequest) {
 
     const isValidSchedule = schedule.every(
       (entry) =>
-        entry.day && entry.from && entry.to && typeof entry.day === "string",
+        entry.day &&
+        entry.from &&
+        entry.to &&
+        typeof entry.day === "string" &&
+        typeof entry.from === "string" &&
+        typeof entry.to === "string",
     );
 
     if (!isValidSchedule) {
       return NextResponse.json(
         { error: "Invalid schedule format." },
+        { status: 400 },
+      );
+    }
+
+    const isValidCertificates = certificates.every(
+      (entry) => entry.title && typeof entry.title === "string",
+    );
+
+    if (!isValidCertificates) {
+      return NextResponse.json(
+        { error: "Invalid certificates format." },
         { status: 400 },
       );
     }
@@ -44,6 +70,8 @@ export async function POST(req: NextRequest) {
       clinic,
       price,
       schedule,
+      certificates,
+      intro,
     });
 
     await newDoctor.save();

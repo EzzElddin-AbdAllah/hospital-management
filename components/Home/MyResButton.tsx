@@ -2,7 +2,7 @@
 
 import { Button, Input, Modal, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import VerificationCodeModal from "../VerificationCodeModal";
@@ -26,12 +26,35 @@ const MyResButton = () => {
     }
   };
 
-  const handlePhoneSubmit = () => {
+  const handlePhoneSubmit = async () => {
     if (phoneNumber.trim()) {
-      closePhoneModal();
-      openCodeModal();
+      try {
+        const response = await fetch(`/api/user/${phoneNumber}`);
+
+        if (response.ok) {
+          closePhoneModal();
+          openCodeModal();
+        } else {
+          router.push("/res");
+        }
+      } catch (error) {
+        router.push("/res");
+      }
     } else {
       alert("يرجى إدخال رقم الهاتف");
+    }
+  };
+
+  const handleOtpSuccess = async () => {
+    if (!phoneNumber) return;
+
+    try {
+      const res = await signIn("credentials", {
+        identifier: phoneNumber,
+        callbackUrl: "/my-res",
+      });
+    } catch (error) {
+      console.error("Error during sign-in:", error);
     }
   };
 
@@ -125,6 +148,7 @@ const MyResButton = () => {
         opened={codeModalOpened}
         onClose={closeCodeModal}
         phoneNumber={phoneNumber}
+        onSuccess={handleOtpSuccess}
       />
     </>
   );

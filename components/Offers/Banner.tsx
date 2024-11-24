@@ -8,7 +8,9 @@ const Banner = () => {
       <div className="relative flex h-[95vh] items-center justify-center bg-[#999999] bg-opacity-80">
         <Image
           className="absolute left-0 top-0 -z-20"
-          src={"/doctor-bg-gray.jpeg"}
+          src={
+            "https://res.cloudinary.com/dmkoec84b/image/upload/v1728984838/doctor-bg-gray_iqxoj3.jpg"
+          }
           width={0}
           height={0}
           sizes="100vw"

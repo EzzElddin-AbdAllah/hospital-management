@@ -1,19 +1,46 @@
 "use client";
 
-import { Modal, Stack, Button, Text } from "@mantine/core";
-import { PinInput } from "@mantine/core";
+import { Button, Modal, PinInput, Stack, Text } from "@mantine/core";
+import { useState } from "react";
 
 interface VerificationCodeModalProps {
   opened: boolean;
   onClose: () => void;
   phoneNumber: string;
+  onSuccess: () => void;
 }
 
 const VerificationCodeModal = ({
   opened,
   onClose,
   phoneNumber,
+  onSuccess,
 }: VerificationCodeModalProps) => {
+  const [otp, setOtp] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleVerifyOtp = async () => {
+    try {
+      const response = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp, phone: phoneNumber }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        onClose();
+        onSuccess();
+      } else {
+        setErrorMessage(result.error || "OTP verification failed.");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setErrorMessage("An error occurred. Please try again.");
+    }
+  };
+
   return (
     <Modal
       dir="rtl"
@@ -43,8 +70,15 @@ const VerificationCodeModal = ({
           type="number"
           placeholder=""
           size="lg"
-          onComplete={(value) => console.log("Code entered:", value)}
+          value={otp}
+          onChange={setOtp}
         />
+
+        {errorMessage && (
+          <Text className="-mb-2 mt-6 text-center text-color-error">
+            {errorMessage}
+          </Text>
+        )}
 
         {/* Resend Code & Troubleshooting */}
         <div className="mt-6 flex justify-evenly text-sm text-color-accent-medium">
@@ -65,7 +99,7 @@ const VerificationCodeModal = ({
         <Button
           variant="filled"
           className="mx-auto mb-12 mt-8 w-fit rounded-full bg-color-accent-medium px-10 text-white"
-          onClick={() => console.log("Verified!")}
+          onClick={handleVerifyOtp}
         >
           التحقق
         </Button>

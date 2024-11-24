@@ -2,13 +2,19 @@ import { Container, Text, Group, Stack, Badge } from "@mantine/core";
 import { FaPhoneAlt } from "react-icons/fa";
 import Image from "next/image";
 
-const Banner = () => {
+interface Props {
+  name?: string;
+  phone?: string;
+  specialty?: string;
+}
+
+const Banner = ({ name, phone, specialty }: Props) => {
   return (
     <Container
       className="relative flex h-screen min-w-full items-center justify-around bg-gradient-to-r
         from-[#1987d9] to-[#1a3698]"
     >
-      <Group className="w-[45%] rounded-[120px] bg-white pb-4 pl-2 lg:-ml-20 lg:-mt-10 lg:w-auto">
+      <Group className="rounded-[120px] bg-white pb-4 pl-2 lg:-ml-20 lg:-mt-10 lg:w-auto">
         <Image
           className="rounded-b-[120px]"
           src={
@@ -40,9 +46,11 @@ const Banner = () => {
           احجز الآن
         </Text>
         <Text className="mt-5 text-xl font-bold text-white lg:text-2xl">
-          دكتور طلال اسماعيل
+          {name}
         </Text>
-        <Text className="-mt-2 text-lg text-white">أخصائي نطق وتخاطب</Text>
+        <Text dir="rtl" className="-mt-2 text-center text-lg text-white">
+          {specialty}
+        </Text>
         <Badge
           color="white"
           size="sm"
@@ -54,7 +62,7 @@ const Banner = () => {
           className="flex items-center justify-center rounded-full py-5 text-center lg:px-8"
         >
           <Text className="text-lg text-color-accent-medium lg:text-xl">
-            +971325445622
+            {phone}
           </Text>
         </Badge>
       </Stack>

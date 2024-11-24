@@ -2,15 +2,25 @@
 
 import { Doctor, Schedule } from "@/types/Doctor";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Group, Modal, Pagination, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Card,
+  Group,
+  Modal,
+  Pagination,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { z } from "zod";
 import TimeRangePicker from "./TimeRangePicker";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 interface Props {
   setTotalDoctors: (totalDoctors: number) => void;
@@ -23,6 +33,10 @@ const timeObjectSchema = z.object({
   to: z.string(),
 });
 
+const certificateSchema = z.object({
+  title: z.string().min(1, "Certificate title is required"),
+});
+
 const doctorSchema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string().min(1, "Phone is required"),
@@ -30,6 +44,8 @@ const doctorSchema = z.object({
   specialty: z.string().min(1, "Specialty is required"),
   price: z.string().min(1, "Price is required"),
   schedule: z.array(timeObjectSchema),
+  certificates: z.array(certificateSchema),
+  intro: z.string().min(1, "Intro is required"),
 });
 
 type DoctorFormData = z.infer<typeof doctorSchema>;
@@ -81,7 +97,14 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
       specialty: "",
       price: "",
       schedule: [],
+      certificates: [],
+      intro: "",
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "certificates",
   });
 
   useEffect(() => {
@@ -109,6 +132,8 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
         price: doctor.price.toString(),
         specialty: doctor.specialty,
         schedule: doctor.schedule,
+        certificates: doctor.certificates,
+        intro: doctor.intro,
       });
     } else {
       setSelectedDoctor(null);
@@ -152,6 +177,8 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
       specialty: "",
       price: "",
       schedule: [],
+      certificates: [{ title: "" }],
+      intro: "",
     });
     close();
     setIsModalReadOnly(false);
@@ -358,6 +385,7 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
                 />
               )}
             />
+
             <Controller
               name="phone"
               disabled={isModalReadOnly}
@@ -370,6 +398,7 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
                 />
               )}
             />
+
             <Controller
               name="clinic"
               disabled={isModalReadOnly}
@@ -382,6 +411,7 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
                 />
               )}
             />
+
             <Controller
               name="specialty"
               disabled={isModalReadOnly}
@@ -390,6 +420,61 @@ const DoctorsTable = ({ setTotalDoctors }: Props) => {
                 <input
                   {...field}
                   placeholder="التخصص"
+                  className="w-full rounded border px-4 py-2"
+                />
+              )}
+            />
+
+            <div className="ml4">
+              <Stack>
+                {fields.map((field, index) => (
+                  <Group key={field.id} align="center" className="flex-nowrap">
+                    <Controller
+                      name={`certificates.${index}.title`}
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          placeholder="الشهادات التعليمية"
+                          disabled={isModalReadOnly}
+                          className="w-full rounded border px-4 py-2"
+                        />
+                      )}
+                    />
+
+                    {!isModalReadOnly && (
+                      <ActionIcon
+                        color="rgb(var(--color-error))"
+                        variant="subtle"
+                        onClick={() => remove(index)}
+                      >
+                        <RiDeleteBin5Fill size={20} />
+                      </ActionIcon>
+                    )}
+                  </Group>
+                ))}
+
+                {!isModalReadOnly && (
+                  <ActionIcon
+                    className="mt-4 flex w-full items-center justify-center"
+                    color="rgb(var(--color-accent-dark))"
+                    variant="outline"
+                    onClick={() => append({ title: "" })}
+                  >
+                    <FaPlus />
+                  </ActionIcon>
+                )}
+              </Stack>
+            </div>
+
+            <Controller
+              name="intro"
+              disabled={isModalReadOnly}
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  {...field}
+                  placeholder="معلومات عن الطبيب"
                   className="w-full rounded border px-4 py-2"
                 />
               )}

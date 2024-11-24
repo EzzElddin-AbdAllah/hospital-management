@@ -85,11 +85,11 @@ const TimeRangePicker = ({
   );
 
   return (
-    <Card className="ml-4">
+    <div className="">
       <Stack>
         {timeRanges.map((range) => (
           <Group key={range._id} align="center" className="flex-nowrap">
-            <span className="text-nowrap text-sm text-gray-400">
+            <span className="mr-1 text-nowrap text-sm text-gray-400">
               مواعيد الطبيب
             </span>
             {/* From Time Picker */}
@@ -131,13 +131,12 @@ const TimeRangePicker = ({
               placeholder="اليوم"
               value={range.day}
               onChange={(value) => updateTimeRange(range._id, "day", value)}
-              className="w-28"
             />
 
             {/* Delete Row Button */}
             {!isModalReadOnly && (
               <ActionIcon
-                className="-ml-2 mb-[1px]"
+                className="mb-[1px]"
                 color="rgb(var(--color-error))"
                 variant="subtle"
                 onClick={() => removeTimeRange(range._id)}
@@ -158,7 +157,7 @@ const TimeRangePicker = ({
           </ActionIcon>
         )}
       </Stack>
-    </Card>
+    </div>
   );
 };
 

@@ -2,6 +2,7 @@
 
 import { Doctor } from "@/types/Doctor";
 import {
+  Anchor,
   Avatar,
   Badge,
   Button,
@@ -17,7 +18,7 @@ import { FcMoneyTransfer } from "react-icons/fc";
 import { GiStethoscope } from "react-icons/gi";
 import { MdArrowBackIos } from "react-icons/md";
 
-const arabicDays = {
+export const arabicDays = {
   sunday: "الأحد",
   monday: "الاثنين",
   tuesday: "الثلاثاء",
@@ -27,7 +28,7 @@ const arabicDays = {
   saturday: "السبت",
 };
 
-const getNextDateForDay = (targetDay: string) => {
+export const getNextDateForDay = (targetDay: string) => {
   const dayMap = {
     sunday: 0,
     monday: 1,
@@ -53,6 +54,12 @@ const getNextDateForDay = (targetDay: string) => {
   const formattedDate = targetDate.toLocaleDateString("en-GB");
 
   return formattedDate;
+};
+
+export const formatHour = (hour: number) => {
+  const period = hour < 12 ? "ص" : "م";
+  const formattedHour = hour % 12 || 12;
+  return `${formattedHour}${period}`;
 };
 
 const DoctorCard = () => {
@@ -109,12 +116,6 @@ const DoctorCard = () => {
     setSelectedDate(date);
     setSelectedTime(time);
     setConfirmationModalOpen(true);
-  };
-
-  const formatHour = (hour: number) => {
-    const period = hour < 12 ? "ص" : "م";
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}${period}`;
   };
 
   const handleBookAppointment = async () => {
@@ -206,10 +207,13 @@ const DoctorCard = () => {
 
       <div
         dir="rtl"
-        className="mx-5 mb-60 mt-20 grid grid-cols-1 rounded-[44px] bg-white py-10 shadow-lg
-          lg:grid-cols-2 lg:px-6 lg:py-28 xl:mx-32 xl:px-10"
+        className="relative mx-5 mb-60 mt-20 grid grid-cols-1 rounded-[44px] bg-white py-10
+          shadow-lg lg:grid-cols-2 lg:px-6 lg:py-28 xl:mx-32 xl:px-10"
       >
-        <div className="mt-10 flex flex-col items-center text-center lg:flex-row lg:gap-10 lg:text-right">
+        <div
+          className="mt-10 flex flex-col items-center text-center lg:mr-10 lg:flex-row lg:gap-10
+            lg:text-right"
+        >
           <Avatar
             src={currentDoctor.image}
             alt="Doctor"
@@ -218,9 +222,14 @@ const DoctorCard = () => {
           />
 
           <div dir="ltr" className="lg:self-start">
-            <Title order={2} className="mb-4 text-3xl font-bold lg:text-4xl">
-              {currentDoctor.name}
-            </Title>
+            <Anchor
+              href={`/doctor/${currentDoctor._id}`}
+              className="text-black"
+            >
+              <Title order={2} className="mb-4 text-3xl font-bold lg:text-4xl">
+                {currentDoctor.name}
+              </Title>
+            </Anchor>
             <div>
               <div className="mx-5 lg:mx-auto">
                 <Text className="mb-4 flex items-center justify-end text-xl text-color-accent-medium lg:text-2xl">
@@ -251,8 +260,8 @@ const DoctorCard = () => {
           </div>
         </div>
 
-        <div className="flex flex-nowrap items-center justify-center">
-          <div className="ml-auto">
+        <div className="flex flex-nowrap items-center justify-center lg:ml-10">
+          <div className="absolute right-4 top-1/2">
             <MdArrowBackIos
               className={`rotate-180 cursor-pointer bg-transparent text-gray-500
                 ${currentDoctorIndex < doctors.length - 1 ? "visible" : "invisible"}`}
@@ -319,7 +328,7 @@ const DoctorCard = () => {
             </div>
           </div>
 
-          <div className="mr-auto">
+          <div className="absolute left-4 top-1/2">
             <MdArrowBackIos
               className={`cursor-pointer bg-transparent text-gray-500
                 ${currentDoctorIndex > 0 ? "visible" : "invisible"}`}

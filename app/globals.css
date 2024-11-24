@@ -13,4 +13,8 @@
     --color-accent-dark: 1 26 119;
     --color-error: 255 0 0;
   }
+
+  html {
+    font-family: var(--font-noto-sans-arabic), sans-serif;
+  }
 }

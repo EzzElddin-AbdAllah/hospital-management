@@ -1,9 +1,74 @@
 "use client";
 
-import { Badge, Button, Text, Title } from "@mantine/core";
-import { MdArrowBackIos } from "react-icons/md";
+import { Schedule } from "@/types/Doctor";
+import { Badge, Button, Group, Modal, Text, Title } from "@mantine/core";
+import { useState } from "react";
+import {
+  arabicDays,
+  formatHour,
+  getNextDateForDay,
+} from "../Clinics/DoctorCard";
 
-const ResCard = () => {
+interface Props {
+  _id?: string;
+  name?: string;
+  schedule?: Schedule[];
+}
+
+const ResCard = ({ _id, name, schedule }: Props) => {
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDayName, setSelectedDayName] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [resultModalOpen, setResultModalOpen] = useState(false);
+  const [resultMessage, setResultMessage] = useState<string>("");
+
+  const handleOpenConfirmationModal = (
+    dayname: string,
+    date: string,
+    time: string,
+  ) => {
+    setSelectedDayName(dayname);
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setConfirmationModalOpen(true);
+  };
+
+  const handleBookAppointment = async () => {
+    setConfirmationModalOpen(false);
+    try {
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          doctorId: _id,
+          date: selectedDate,
+          time: selectedTime,
+        }),
+      });
+
+      if (response.status === 401) {
+        window.location.href = "/res";
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setResultMessage(data.error || "فشل في حجز الموعد.");
+      } else {
+        setResultMessage("تم حجز الموعد بنجاح.");
+      }
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+      setResultMessage("حدث خطأ أثناء حجز الموعد.");
+    } finally {
+      setResultModalOpen(true);
+    }
+  };
+
   return (
     <div
       className="mx-5 mb-32 flex items-center justify-center rounded-[44px] bg-white py-7
@@ -23,230 +88,96 @@ const ResCard = () => {
           احجز اونلاين برقم الهاتف، وبدون الحاجه للتسجيل
         </Text>
 
-        <div className="-mr-24 grid grid-cols-5 gap-2 lg:mr-36 lg:gap-10">
-          <div className="ml-3">
-            <Button className="h-fit w-20 rounded-lg bg-color-accent-dark py-1 text-sm text-white">
-              يوم آخر
-            </Button>
-            <MdArrowBackIos
-              className="mt-24 bg-transparent text-gray-300"
-              size={24}
-              style={{ width: 55, height: 55 }}
-            />
-          </div>
+        <div className="flex flex-nowrap items-center justify-center">
+          <div className="">
+            <div
+              className={`grid justify-self-center
+                grid-cols-${schedule?.length! > 3 ? 3 : schedule?.length} -ml-3 mb-4 gap-4
+                lg:-ml-0 lg:gap-20`}
+            >
+              {schedule?.slice(0, 3).map((daySchedule, index) => {
+                const { day, from, to } = daySchedule;
+                const arabicDay = arabicDays[day as keyof typeof arabicDays];
+                const startHour = parseInt(from.split(":")[0], 10);
+                const endHour = parseInt(to.split(":")[0], 10);
+                const hours = Array.from(
+                  { length: endHour - startHour },
+                  (_, i) => startHour + i,
+                );
 
-          <div className="hidden flex-col items-center gap-4 lg:flex">
-            <Badge
-              className="mb-2 h-10 w-20 rounded-lg bg-color-accent-light pl-5 text-base font-medium
-                leading-none text-black"
-            >
-              <span>الثلاثاء</span>
-              <br />
-              <span className="pl-1">2/8</span>
-            </Badge>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              1:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              2:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              3:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              5:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              6:00م
-            </Button>
-            <Button className="h-fit w-20 rounded-lg bg-[#8AAB58] text-base text-black">
-              احجز
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center gap-4">
-            <Badge
-              className="mb-2 h-10 w-20 rounded-lg bg-color-accent-light pl-5 text-base font-medium
-                leading-none text-black"
-            >
-              <span>الاثنين</span>
-              <br />
-              <span className="pl-1">1/8</span>
-            </Badge>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              1:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              2:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              3:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              5:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              6:00م
-            </Button>
-            <Button className="h-fit w-20 rounded-lg bg-[#8AAB58] text-base text-black">
-              احجز
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center gap-4">
-            <Badge
-              className="mb-2 h-10 w-20 rounded-lg bg-color-accent-light py-2 pl-7 text-base font-medium
-                text-black"
-            >
-              غداً
-            </Badge>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              1:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              2:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              3:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              5:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              6:00م
-            </Button>
-            <Button className="h-fit w-20 rounded-lg bg-[#8AAB58] text-base text-black">
-              احجز
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center gap-4">
-            <Badge
-              className="mb-2 h-10 w-20 rounded-lg bg-color-accent-light py-2 pl-6 text-base font-medium
-                text-black"
-            >
-              اليوم
-            </Badge>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              1:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              2:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              3:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              5:00م
-            </Button>
-            <Button
-              variant="filled"
-              color="#ebedf0"
-              className="mb-2 h-fit w-20 rounded-lg text-base text-black"
-              dir="rtl"
-            >
-              6:00م
-            </Button>
-            <Button className="h-fit w-20 rounded-lg bg-[#8AAB58] text-base text-black">
-              احجز
-            </Button>
+                return (
+                  <div
+                    key={daySchedule._id}
+                    className="flex flex-col items-end gap-4"
+                  >
+                    <Badge
+                      className="mb-2 h-10 w-24 rounded-lg bg-color-accent-light text-center text-base
+                        font-medium text-black"
+                    >
+                      <span>{arabicDay}</span>
+                    </Badge>
+                    {hours.map((hour) => (
+                      <Button
+                        key={hour}
+                        variant="filled"
+                        color="#ebedf0"
+                        className="mb-2 h-fit w-24 rounded-lg text-base text-black"
+                        dir="rtl"
+                        onClick={() =>
+                          handleOpenConfirmationModal(
+                            day,
+                            getNextDateForDay(day),
+                            `${formatHour(hour)}`,
+                          )
+                        }
+                      >
+                        {formatHour(hour)}
+                      </Button>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+
+        {/* Confirmation Modal */}
+        <Modal
+          dir="rtl"
+          opened={confirmationModalOpen}
+          onClose={() => setConfirmationModalOpen(false)}
+          title="تأكيد الحجز"
+          centered
+        >
+          <Text>
+            هل تريد تأكيد حجز موعدك مع الدكتور {name} في يوم{" "}
+            {arabicDays[selectedDayName as keyof typeof arabicDays]}{" "}
+            {selectedDate} الساعة {selectedTime}؟
+          </Text>
+          <Group mt="md" justify="end">
+            <Button onClick={handleBookAppointment}>تأكيد</Button>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmationModalOpen(false)}
+            >
+              إلغاء
+            </Button>
+          </Group>
+        </Modal>
+
+        {/* Result Modal */}
+        <Modal
+          dir="rtl"
+          opened={resultModalOpen}
+          onClose={() => setResultModalOpen(false)}
+          title="نتيجة الحجز"
+          centered
+        >
+          <Text>{resultMessage}</Text>
+          <Group mt="md" justify="end">
+            <Button onClick={() => setResultModalOpen(false)}>إغلاق</Button>
+          </Group>
+        </Modal>
       </div>
     </div>
   );

@@ -2,17 +2,22 @@
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, createTheme } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
-import { Inter } from "next/font/google";
+import { Noto_Sans_Arabic } from "next/font/google";
 
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const notoSansArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
   display: "fallback",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
+  variable: "--font-noto-sans-arabic",
+});
+
+const theme = createTheme({
+  fontFamily: "var(--font-noto-sans-arabic), sans-serif",
+  headings: { fontFamily: "var(--font-noto-sans-arabic), sans-serif" },
 });
 
 export default function RootLayout({
@@ -21,10 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${inter.className}`}>
+    <html
+      lang="en"
+      className={`${notoSansArabic.variable} ${notoSansArabic.className}`}
+    >
       <body className="flex min-h-screen flex-col">
         <SessionProvider>
-          <MantineProvider>
+          <MantineProvider theme={theme}>
             <Header />
             {children}
             <Footer />

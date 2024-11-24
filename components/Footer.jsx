@@ -11,36 +11,24 @@ const Footer = () => {
   if (pathname === "/dashboard") return null;
 
   return (
-    <footer
-      className="static bg-gradient-to-r from-[#4F85D4] to-[#293894] py-8 text-white
-        transition-all duration-300 ease-in-out"
-    >
+    <footer className="bg-gradient-to-r from-[#4F85D4] to-[#293894] py-8">
       <Group
         py={80}
         className="flex-col-reverse items-center justify-center gap-14 lg:ml-40 lg:flex-row
           lg:items-start lg:justify-between lg:px-20"
       >
-        <Stack align="start" gap={100} className="lg:-mr-32">
-          <Anchor
-            href="#"
-            className="hidden text-xl font-bold text-white lg:block"
-          >
-            عنا
-          </Anchor>
-
-          <Group>
-            <FaLink className="cursor-pointer text-xl text-white" />
-            <FaLinkedin className="cursor-pointer text-2xl text-white" />
-            <AiFillTwitterCircle className="cursor-pointer text-2xl text-white" />
-            <FaFacebook className="cursor-pointer text-2xl text-white" />
-          </Group>
-        </Stack>
+        <Group>
+          <FaLink className="cursor-pointer text-xl text-white" />
+          <FaLinkedin className="cursor-pointer text-2xl text-white" />
+          <AiFillTwitterCircle className="cursor-pointer text-2xl text-white" />
+          <FaFacebook className="cursor-pointer text-2xl text-white" />
+        </Group>
 
         <Anchor
-          href="#"
+          href="about-us"
           className="hidden text-xl font-bold text-white lg:block"
         >
-          خدماتنا
+          عنا
         </Anchor>
 
         <Stack spacing={8} align="start" className="hidden lg:flex">
@@ -53,15 +41,12 @@ const Footer = () => {
         </Stack>
 
         <Stack spacing={8} align="start" className="hidden lg:flex">
-          <Text className="text-xl font-bold">روابط مهمة</Text>
-          <Anchor href="#" className="text-lg text-white">
-            الأسئلة الشائعة
+          <Text className="text-xl font-bold text-white">روابط مهمة</Text>
+          <Anchor href="/offers" className="text-lg text-white">
+            العروض
           </Anchor>
-          <Anchor href="#" className="text-lg text-white">
-            علاقات المستثمرين
-          </Anchor>
-          <Anchor href="#" className="text-lg text-white">
-            علاقات المستثمرين
+          <Anchor href="/clinics" className="text-lg text-white">
+            العيادات
           </Anchor>
         </Stack>
 
@@ -71,7 +56,7 @@ const Footer = () => {
       </Group>
 
       <Text align="center" className="mt-8 text-xs text-white lg:text-sm">
-        جميع الحقوق محفوظة ل مجموعة الدكتور سلمان الحبيب الطبية - 2024 ©
+        جميع الحقوق محفوظة لـ مجموعة الدكتور سلمان الحبيب الطبية - 2024 ©
       </Text>
     </footer>
   );

@@ -16,4 +16,6 @@ export interface Doctor {
   totalReviews: number;
   image: string;
   schedule: Schedule[];
+  certificates: { title: string }[];
+  intro: string;
 }

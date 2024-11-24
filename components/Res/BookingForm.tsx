@@ -2,10 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, TextInput, Title } from "@mantine/core";
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useDisclosure } from "@mantine/hooks";
+import VerificationCodeModal from "../VerificationCodeModal";
+import { signIn } from "next-auth/react";
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "الاسم يجب أن يكون على الأقل 2 أحرف" }),
@@ -25,6 +27,10 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 
 const BookingForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [formData, setFormData] = useState<SignUpFormData | null>(null);
+  const [codeModalOpened, { open: openCodeModal, close: closeCodeModal }] =
+    useDisclosure(false);
+
   const {
     register,
     handleSubmit,
@@ -33,14 +39,19 @@ const BookingForm = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = async (data: SignUpFormData) => {
+  const onSubmit = (data: SignUpFormData) => {
+    setFormData(data);
+    openCodeModal();
+  };
+
+  const handleOtpSuccess = async () => {
+    if (!formData) return;
+
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -53,7 +64,7 @@ const BookingForm = () => {
       setErrorMessage(null);
 
       const res = await signIn("credentials", {
-        identifier: data.phone,
+        identifier: formData.phone,
         callbackUrl: "/",
       });
 
@@ -61,7 +72,7 @@ const BookingForm = () => {
         alert("Error signing in");
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("Error during sign-up:", error);
       setErrorMessage("An error occurred during sign-up. Please try again.");
     }
   };
@@ -128,6 +139,14 @@ const BookingForm = () => {
           </Button>
         </form>
       </div>
+
+      {/* Verification Code Modal */}
+      <VerificationCodeModal
+        opened={codeModalOpened}
+        onClose={closeCodeModal}
+        phoneNumber={formData?.phone!}
+        onSuccess={handleOtpSuccess}
+      />
     </div>
   );
 };
