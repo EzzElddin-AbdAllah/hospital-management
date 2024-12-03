@@ -1,6 +1,7 @@
 "use client";
 
 import { Anchor, Button, Drawer, Group, Menu, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,11 +12,7 @@ import { IoIosClose } from "react-icons/io";
 const Header = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const [opened, setOpened] = useState(false);
-
-  const toggleDrawer = () => {
-    setOpened(!opened);
-  };
+  const [opened, { open, close }] = useDisclosure(false);
 
   const handleSignOut = () => {
     signOut();
@@ -31,7 +28,27 @@ const Header = () => {
     <>
       <header className="absolute z-10 w-full">
         <Group justify="space-between" className="px-7 py-10 lg:px-14 lg:py-6">
+          <Group className="w-full justify-between lg:w-auto">
+            <Text className="font-roboto text-4xl font-bold text-white">
+              لوجو
+            </Text>
+            <HiOutlineMenuAlt2
+              size={35}
+              onClick={open}
+              className="text-white lg:hidden"
+            />
+          </Group>
+
           <Group gap={50} className="hidden lg:flex">
+            <Anchor href="/" className="text-lg text-white">
+              الرئيسية
+            </Anchor>
+            <Anchor href="/offers" className="text-lg text-white">
+              العروض
+            </Anchor>
+            <Anchor href="/clinics" className="text-lg text-white">
+              الدكاترة
+            </Anchor>
             {session ? (
               <Menu>
                 <Menu.Target>
@@ -67,39 +84,22 @@ const Header = () => {
                 تسجيل
               </Button>
             )}
-
-            <Anchor href="/clinics" className="text-lg text-white">
-              الدكاترة
-            </Anchor>
-            <Anchor href="/offers" className="text-lg text-white">
-              العروض
-            </Anchor>
-            <Anchor href="/" className="text-lg text-white">
-              الرئيسية
-            </Anchor>
-          </Group>
-
-          <Group className="w-full justify-between lg:w-auto">
-            <HiOutlineMenuAlt2
-              size={35}
-              onClick={toggleDrawer}
-              className="text-white lg:hidden"
-            />
-            <Text className="font-roboto text-4xl font-bold text-white">
-              لوجو
-            </Text>
           </Group>
         </Group>
       </header>
 
       <Drawer
         opened={opened}
-        onClose={toggleDrawer}
-        size="30%"
+        onClose={close}
+        size="50%"
+        position="right"
         withCloseButton={false}
-        className="items-center"
+        className="relative"
       >
-        <div className="absolute left-0 top-0 flex h-32 w-full items-center justify-start">
+        <div
+          className="pointer-events-none absolute left-0 top-0 flex h-32 w-full items-center
+            justify-start"
+        >
           <svg
             width="300"
             height="300"
@@ -111,31 +111,28 @@ const Header = () => {
           </svg>
           <IoIosClose
             size={50}
-            onClick={toggleDrawer}
+            onClick={close}
             className="absolute top-0 mt-6 text-white"
           />
         </div>
 
-        <div className="mt-28 flex flex-col items-center justify-center gap-7 text-center">
+        <div className="flex h-screen flex-col items-center justify-center gap-12 text-center">
           <Anchor href="/" className="text-lg font-bold text-[#485B78]">
             الرئيسية
           </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
+          <Anchor href="/offers" className="text-lg font-bold text-[#485B78]">
             العروض
           </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
+          <Anchor href="/clinics" className="text-lg font-bold text-[#485B78]">
             الدكاترة
           </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
+          <Anchor
+            href="/contact-us"
+            className="text-lg font-bold text-[#485B78]"
+          >
             تواصل معانا
           </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
-            الأسئلة الشائعة
-          </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
-            خدماتنا
-          </Anchor>
-          <Anchor href="#" className="text-lg font-bold text-[#485B78]">
+          <Anchor href="/about-us" className="text-lg font-bold text-[#485B78]">
             عنا
           </Anchor>
           {session ? (
@@ -157,10 +154,10 @@ const Header = () => {
           )}
         </div>
 
-        <div className="-ml-5 h-40 w-full">
+        <div className="absolute bottom-0 left-0 right-0 translate-x-[-11%] translate-y-[55%]">
           <svg
-            width="300"
-            height="300"
+            width="111%"
+            height="auto"
             viewBox="20 15 134 126"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

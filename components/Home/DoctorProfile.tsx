@@ -10,6 +10,9 @@ const DoctorProfile = () => {
         width={300}
         height={380}
         alt="Doctor Soliman"
+        style={{
+          shapeOutside: "circle()",
+        }}
       />
       <Image
         className="float-right mx-4 mt-2 rounded-full lg:hidden"
@@ -17,6 +20,9 @@ const DoctorProfile = () => {
         width={150}
         height={150}
         alt="Doctor Soliman"
+        style={{
+          shapeOutside: "circle()",
+        }}
       />
 
       <Text
@@ -27,8 +33,8 @@ const DoctorProfile = () => {
       </Text>
       <Text
         dir="rtl"
-        className="px-5 text-justify text-xl leading-8 text-black text-opacity-60 lg:px-0
-          lg:text-3xl xl:leading-[50px]"
+        className="px-5 text-justify text-xl leading-8 text-black text-opacity-60 md:leading-10
+          lg:px-0 lg:text-3xl lg:leading-[45px] xl:leading-[65px]"
         style={{
           maxWidth: "70ch",
         }}

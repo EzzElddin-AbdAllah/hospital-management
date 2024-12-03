@@ -5,7 +5,7 @@ import { Text, Title, List } from "@mantine/core";
 const AboutClinics = () => {
   return (
     <div
-      className="mx-2 mt-10 rounded-lg bg-white p-8 lg:m-10 lg:rounded-[44px] lg:p-10"
+      className="mx-5 mt-10 rounded-[44px] bg-white p-8 lg:p-10 xl:mx-32"
       style={{
         boxShadow: "0px 0px 11px rgba(0, 0, 0, 0.25)",
       }}

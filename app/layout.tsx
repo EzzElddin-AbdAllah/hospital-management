@@ -30,7 +30,7 @@ export default function RootLayout({
       lang="en"
       className={`${notoSansArabic.variable} ${notoSansArabic.className}`}
     >
-      <body className="flex min-h-screen flex-col">
+      <body className="flex flex-col min-h-screen">
         <SessionProvider>
           <MantineProvider theme={theme}>
             <Header />
